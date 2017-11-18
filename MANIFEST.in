@@ -1,0 +1,20 @@
+include LICENSE
+include README.md
+include tox.ini
+include Makefile
+include pytest.ini
+
+exclude .gitlab-ci.yml
+
+recursive-include tests *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+
+include requirements.txt
+recursive-include requirements *.txt
+
+recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif
+exclude docs/midiscenemanager.rst
+
+include */user_settings.json */*.kv
+recursive-include data **/*.mo

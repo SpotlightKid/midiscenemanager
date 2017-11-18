@@ -1,0 +1,44 @@
+# Switch between setups of MIDI devices (scenes) with a press of a button
+# Copyright (C) 2017 Christopher Arndt
+# This file is distributed under the same license as the midiscenemanager package.
+# Christopher Arndt <info@chrisarndt.de>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-07-18 13:00+0200\n"
+"PO-Revision-Date: 2015-07-18 13:00+0200\n"
+"Last-Translator: Christopher Arndt <info@chrisarndt.de>\n"
+"Language-Team: English <info@chrisarndt.de>\n"
+"Language: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: foobar/helloworld.kv:47
+msgid ""
+"'MIDISceneManager'\n"
+"\n"
+"Switch between setups of MIDI devices (scenes) with a press of a button"
+msgstr ""
+
+#: foobar/helloworld.kv:51
+msgid "This app uses Kivy, a Python Framework for NUI Development."
+msgstr ""
+
+#: foobar/helloworld.kv:59
+msgid ""
+"It was generated with the Python command-line utility\n"
+"Cookiecutter along with Cookiedozer."
+msgstr ""
+
+#: foobar/helloworld.kv:68
+msgid ""
+"Distributed under the terms of the MIT license,\n"
+"'MIDISceneManager' is free and open source software."
+msgstr ""
+
+#: foobar/helloworld.kv:72
+msgid "Fork me on GitHub"
+msgstr ""

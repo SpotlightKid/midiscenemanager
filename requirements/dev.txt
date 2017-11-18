@@ -1,0 +1,17 @@
+-r base.txt
+
+Cython==0.27.3
+# Kivy is not installable into a fresh virtualenv in one stage because its setup requires Cython :(
+#-e git+https://github.com/kivy/kivy.git@3b85f3e1c292b3f6c3f226490f52a2ab78251730#egg=Kivy
+coverage
+flake8
+pycodestyle
+pydocstyle
+pylint
+pytest
+pytest-cov
+pytest-pep8
+pytest-mock
+radon
+Sphinx
+sphinxcontrib-napoleon
