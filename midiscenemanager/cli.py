@@ -14,7 +14,8 @@ from midiscenemanager.midiscenemanager import MIDISceneManagerApp
     '-l', '--language', help='Default language of the App', default='en',
     type=click.Choice(['en', 'es', 'de', 'fr'])
 )
-def main(language):
+@click.argument('configfile')
+def main(configfile, language):
     """Run MIDISceneManagerApp with the given language setting.
     """
-    MIDISceneManagerApp(language).run()
+    MIDISceneManagerApp(configfile, lang=language).run()
