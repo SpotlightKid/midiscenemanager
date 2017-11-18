@@ -3,6 +3,7 @@
 import gettext
 import sys
 import webbrowser
+from os.path import join, dirname
 
 import kivy
 kivy.require('1.10.0')  # noqa:E402
@@ -15,7 +16,6 @@ from kivy.properties import (BoundedNumericProperty, ObjectProperty, StringPrope
 from kivy.uix.carousel import Carousel
 from kivy.uix.label import Label
 from kivy.uix.progressbar import ProgressBar
-from os.path import join, dirname
 
 
 TIMER_OPTIONS = {
