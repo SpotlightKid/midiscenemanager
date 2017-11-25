@@ -18,7 +18,7 @@ def parse_number(s):
 
 
 def parse_command(s):
-    cmd, *args = s.strip().split()
+    cmd, *args = s.lower().strip().split()
     kwargs = dict()
 
     for arg in args:
