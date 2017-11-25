@@ -3,6 +3,8 @@ MIDISceneManager
 
 Switch between setups of MIDI devices (scenes) with a press of a button.
 
+.. image:: midiscenemanager_gui_poc.png
+   :width: 480px
 
 Features
 --------
