@@ -255,10 +255,14 @@ class MIDISceneManagerApp(App):
 
 def main(args=None):
     """Main program entry point."""
-    if not args:
+    if args and len(args) > 1:
         return "Usage: midiscenemanager.py <config>"
+    elif args:
+        config = args[0]
+    else:
+        config = join(dirname(__file__), 'default.cfg')
 
-    app = MIDISceneManagerApp(args[0])
+    app = MIDISceneManagerApp(config)
 
     try:
         app.run()
