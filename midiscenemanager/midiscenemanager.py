@@ -159,7 +159,7 @@ class MIDISceneManagerApp(App):
         """Display settings panel widget in our own TabbedPanel."""
         if self.settings_panel.content is not settings:
             self.settings_panel.add_widget(settings)
-            Logger.debug("MIDISceneManager: added conetnt of settings panel.")
+            Logger.debug("MIDISceneManager: added content of settings panel.")
         return False
 
     def on_config_change(self, config, section, key, value):
