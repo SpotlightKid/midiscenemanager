@@ -225,12 +225,16 @@ class MIDISceneManagerApp(App):
 
     def on_key_down(self, keyb, keyspec, codepoint, modifiers):
         if codepoint == 'f':
+            # Toggle fullscreen mode
             keyb.window.fullscreen = not keyb.window.fullscreen
         elif keyspec[0] == 293 and modifiers == []:  # F12
+            # Take screenshot of window content
             keyb.window.screenshot()
-        elif keyspec[0] == 292 and modifiers == []:  # F11
-            keyb.window.rotation += 90
         elif keyspec[0] == 292 and modifiers == ['shift']:  # Shift + F11
+            # rotate window 90 degrees
+            keyb.window.rotation += 90
+        elif keyspec[0] == 292 and modifiers == []:  # F11
+            # Toggle landscape / portrait
             if platform in ('win', 'linux', 'macosx'):
                 keyb.window.rotation = 0
                 w, h = keyb.window.size
