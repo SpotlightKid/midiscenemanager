@@ -65,7 +65,6 @@ Topic :: Software Development :: User Interfaces
 
 install_requires = [
     #'kivy>=1.10.0',
-    'click',
     'python-rtmidi',
 ]
 
@@ -87,7 +86,7 @@ setup(
     install_requires=install_requires,
     entry_points={
         'console_scripts': [
-            'midiscenemanager=midiscenemanager.cli:main'
+            'midiscenemanager=midiscenemanager.midiscenemanager:main'
         ]
     },
     cmdclass={'test': ToxTestCommand},
