@@ -16,7 +16,10 @@ Config.set('kivy', 'log_level', 'debug')  # noqa:E402
 #Config.set('kivy', 'log_level', 'info')
 
 from kivy.app import App
+from kivy.core.window import Window
+from kivy.garden import xpopup
 from kivy.logger import Logger
+from kivy.modules import keybinding
 from kivy.properties import BoundedNumericProperty, ObjectProperty, StringProperty
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
@@ -24,7 +27,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.settings import SettingsWithNoMenu
 from kivy.uix.tabbedpanel import TabbedPanelItem
 from kivy.uix.togglebutton import ToggleButton
-from kivy.garden import xpopup
+from kivy.utils import platform
 
 from .config import parse_config
 from .midiio import get_midiout
@@ -179,11 +182,40 @@ class MIDISceneManagerApp(App):
 #~        super().close_settings(settings)
 #~        self.root.ids.tp.switch_to(self.root.ids.panel_scenes1)
 
+    def on_start(self):
+        #self.root_window.fullscreen = True
+        self.root_window.minimum_width = 800
+        self.root_window.minimum_height = 600
+        self._keyboard = self.root_window.request_keyboard(self._keyboard_closed, self.root)
+        self._keyboard.bind(on_key_down=self.on_key_down)
+
+    def on_stop(self):
+        pass
+
     def on_pause(self):
         return True
 
     def on_resume(self):
         pass
+
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self.on_key_down)
+        self._keyboard = None
+
+    def on_key_down(self, keyb, keyspec, codepoint, modifiers):
+        if codepoint == 'f':
+            keyb.window.fullscreen = not keyb.window.fullscreen
+        elif keyspec[0] == 293 and modifiers == []:  # F12
+            keyb.window.screenshot()
+        elif keyspec[0] == 292 and modifiers == []:  # F11
+            keyb.window.rotation += 90
+        elif keyspec[0] == 292 and modifiers == ['shift']:  # Shift + F11
+            if platform in ('win', 'linux', 'macosx'):
+                keyb.window.rotation = 0
+                w, h = keyb.window.size
+                keyb.window.size = (h, w)
+                self.root_window.minimum_width, self.root_window.minimum_height = (
+                    self.root_window.minimum_height, self.root_window.minimum_width)
 
     def on_scene_button(self, btn):
         if self.current_scene != btn.scene:
