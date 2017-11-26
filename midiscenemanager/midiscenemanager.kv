@@ -1,24 +1,61 @@
 #:kivy 1.9
 #:import C kivy.utils.get_color_from_hex
+#:import Toolbar kivymd.toolbar.Toolbar
+
+#<MIDISceneButton>
+#    font_size: self.panel.label_size
+#    background_normal: 'assets/img/button_background.png'
+#    background_down: 'assets/img/button_background_down.png'
+#    background_color: C('##FF7400')
+#    size_hint_y: None
+#    #text_size: self.width, None
+#    width: self.texture_size[0]
+#    height: self.aspect_ratio * self.width
+#    padding: '10dp', '20dp'
 
 <MIDISceneButton>
-    font_size: self.panel.label_size
-    background_normal: 'assets/img/button_background.png'
-    background_down: 'assets/img/button_background_down.png'
-    background_color: C('##FF7400')
+    size_hint: None, None
+    size: dp(240), dp(120)
+    pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+    md_bg_color: self.theme_cls.bg_light if self.state == 'normal' else C('FFD37C')
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(8)
+        MDLabel:
+            text: root.text
+            theme_text_color: 'Secondary'
+            font_style: "Title"
+            size_hint_y: None
+            height: dp(36)
+        MDSeparator:
+            height: dp(1)
+        MDLabel:
+            text: root.subtitle
+            theme_text_color: 'Primary'
+
+<TileGrid>
     size_hint_y: None
-    size_hint_x: 0.2
-    text_size: self.width, None
-    #height: self.texture_size[1]
-    # keep
-    height: self.aspect_ratio * self.width
-    padding: '10dp', '20dp'
+    height: self.minimum_height
+    padding: dp(16), dp(16)
+    spacing: dp(16)
 
 
 <MIDISceneManagerScreen>:
     name: 'MidiSceneManager'
-    fullscreen: True
-    do_default_tab: False
 
-    TabbedPanel:
-        id: tp
+    BoxLayout:
+        orientation: 'vertical'
+        Toolbar:
+            id: toolbar
+            title: 'MIDI Scene Manager'
+            md_bg_color: app.theme_cls.primary_color
+            background_palette: 'Primary'
+            background_hue: '500'
+
+        ScreenManager:
+            id: scr_mngr
+            Screen:
+                MDTabbedPanel:
+                    tab_display_mode:'text'
+                    id: tp
