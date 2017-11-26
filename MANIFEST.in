@@ -16,5 +16,5 @@ recursive-include requirements *.txt
 recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif
 exclude docs/midiscenemanager.rst
 
-include */user_settings.json */*.kv
+recursive-include midiscenemanager *.cfg *.ini *.json *.kv
 recursive-include data **/*.mo

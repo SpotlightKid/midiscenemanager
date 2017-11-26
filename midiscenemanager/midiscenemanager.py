@@ -16,15 +16,23 @@ Config.set('kivy', 'log_level', 'debug')  # noqa:E402
 #Config.set('kivy', 'log_level', 'info')
 
 from kivy.app import App
+from kivy.core.window import Window
+from kivy.garden import xpopup
 from kivy.logger import Logger
+from kivy.modules import keybinding
 from kivy.properties import BoundedNumericProperty, ObjectProperty, StringProperty
+from kivy.uix.behaviors.togglebutton import ToggleButtonBehavior
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.settings import SettingsWithNoMenu
 from kivy.uix.tabbedpanel import TabbedPanelItem
 from kivy.uix.togglebutton import ToggleButton
-from kivy.garden import xpopup
+from kivy.utils import platform
+from kivymd.card import MDCard
+from kivymd.tabs import MDTab
+from kivymd.theming import ThemeManager
 
 from .config import parse_config
 from .midiio import get_midiout
@@ -60,21 +68,39 @@ class MIDISceneManagerScreen(Screen):
     pass
 
 
-class MIDISceneButton(ToggleButton):
+# ~class MIDISceneButton(ToggleButton):
+# ~    scene = StringProperty()
+# ~    panel = ObjectProperty(allow_none=True)
+# ~    aspect_ratio = BoundedNumericProperty(0.5, min=0.0, max=1.0)
+
+class MIDISceneButton(ToggleButtonBehavior, MDCard):
     scene = StringProperty()
     panel = ObjectProperty(allow_none=True)
+    text = StringProperty()
+    subtitle = StringProperty()
+
+    def __init__(self, text='', subtitle='', scene=None, panel=None, group='scenes'):
+        super().__init__(text=text, group=group)
+        self.scene = scene
+        self.panel = panel
 
 
-class ScenePanel(TabbedPanelItem):
+class TileGrid(GridLayout):
+    pass
+
+
+class ScenePanel(MDTab):
     label_size = BoundedNumericProperty(20, min=8)
 
     def __init__(self, name, panel):
-        super().__init__(id=name, text=panel.title or name)
-        self.layout = GridLayout(cols=panel.cols or 5, padding=20, spacing=20)
-        #self.layout = StackLayout(orientation='lr-tb', padding=20, spacing=20)
+        super().__init__(id=name, name=name, text=panel.title or name)
+        #self.sv = ScrollView(size_hint=(1, None), size=(self.width, self.height))
+        self.sv = ScrollView(size=(self.width, self.height))
+        self.layout = TileGrid(cols=panel.cols or 5)
         if panel.rows is not None:
             self.layout.rows = panel.rows
-        self.add_widget(self.layout)
+        self.sv.add_widget(self.layout)
+        self.add_widget(self.sv)
 
 
 class EnhancedSettings(SettingsWithNoMenu):
@@ -86,8 +112,8 @@ class EnhancedSettings(SettingsWithNoMenu):
 
 
 class MIDISceneManagerApp(App):
-    title = 'MIDISceneManager'
-
+    title = 'MIDI Scene Manager'
+    theme_cls = ThemeManager()
     language = StringProperty('en')
     translation = ObjectProperty(None, allownone=True)
 
@@ -132,8 +158,8 @@ class MIDISceneManagerApp(App):
             Logger.debug("MIDISceneManager: added scene panel '{}'.".format(panelname))
             self.panels[panelname] = scene_panel
 
-        self.settings_panel = TabbedPanelItem(id='panel_settings', text='Settings')
-        self.settings_panel.bind(on_release=lambda *args: self.open_settings())
+        self.settings_panel = MDTab(id='panel_settings', name='settings', text='Settings')
+        self.settings_panel.bind(on_tab_release=lambda *args: self.open_settings())
         root.ids.tp.add_widget(self.settings_panel)
 
         if self.default_panel and self.default_panel in self.panels:
@@ -156,9 +182,9 @@ class MIDISceneManagerApp(App):
 
     def display_settings(self, settings):
         """Display settings panel widget in our own TabbedPanel."""
-        if self.settings_panel.content is not settings:
+        if not self.settings_panel.children:
             self.settings_panel.add_widget(settings)
-            Logger.debug("MIDISceneManager: added conetnt of settings panel.")
+            Logger.debug("MIDISceneManager: added content of settings panel.")
         return False
 
     def on_config_change(self, config, section, key, value):
@@ -178,11 +204,43 @@ class MIDISceneManagerApp(App):
 #~        super().close_settings(settings)
 #~        self.root.ids.tp.switch_to(self.root.ids.panel_scenes1)
 
+    def on_start(self):
+        self.root_window.minimum_width = 800
+        self.root_window.minimum_height = 600
+        self._keyboard = self.root_window.request_keyboard(self._keyboard_closed, self.root)
+        self._keyboard.bind(on_key_down=self.on_key_down)
+
+    def on_stop(self):
+        pass
+
     def on_pause(self):
         return True
 
     def on_resume(self):
         pass
+
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self.on_key_down)
+        self._keyboard = None
+
+    def on_key_down(self, keyb, keyspec, codepoint, modifiers):
+        if codepoint == 'f':
+            # Toggle fullscreen mode
+            keyb.window.fullscreen = not keyb.window.fullscreen
+        elif keyspec[0] == 293 and modifiers == []:  # F12
+            # Take screenshot of window content
+            keyb.window.screenshot()
+        elif keyspec[0] == 292 and modifiers == ['shift']:  # Shift + F11
+            # rotate window 90 degrees
+            keyb.window.rotation += 90
+        elif keyspec[0] == 292 and modifiers == []:  # F11
+            # Toggle landscape / portrait
+            if platform in ('win', 'linux', 'macosx'):
+                keyb.window.rotation = 0
+                w, h = keyb.window.size
+                keyb.window.size = (h, w)
+                self.root_window.minimum_width, self.root_window.minimum_height = (
+                    self.root_window.minimum_height, self.root_window.minimum_width)
 
     def on_scene_button(self, btn):
         if self.current_scene != btn.scene:
@@ -255,10 +313,17 @@ class MIDISceneManagerApp(App):
 
 def main(args=None):
     """Main program entry point."""
-    if not args:
-        return "Usage: midiscenemanager.py <config>"
+    if args is None:
+        args = sys.argv[1:]
 
-    app = MIDISceneManagerApp(args[0])
+    if args and len(args) > 1:
+        return "Usage: midiscenemanager.py <config>"
+    elif args:
+        config = args[0]
+    else:
+        config = join(dirname(__file__), 'default.cfg')
+
+    app = MIDISceneManagerApp(config)
 
     try:
         app.run()

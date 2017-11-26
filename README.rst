@@ -3,8 +3,30 @@ MIDISceneManager
 
 Switch between setups of MIDI devices (scenes) with a press of a button.
 
-.. image:: midiscenemanager_gui_poc.png
-   :width: 480px
+
+Screenshots
+-----------
+
+.. figure:: docs/source/images/screenshot0001.png
+    :width: 480px
+
+    Scene selection buttons for a scene set named "Set One"
+
+.. figure:: docs/source/images/screenshot0002.png
+    :width: 480px
+
+    Scene selection buttons for standard MIDIprogram changes
+
+.. figure:: docs/source/images/screenshot0003.png
+    :width: 480px
+
+    The settings screen
+    
+.. figure:: docs/source/images/screenshot0004.png
+    :width: 480px
+
+    Setting the button label font size
+
 
 Features
 --------
