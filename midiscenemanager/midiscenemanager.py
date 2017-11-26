@@ -63,6 +63,7 @@ class MIDISceneManagerScreen(Screen):
 class MIDISceneButton(ToggleButton):
     scene = StringProperty()
     panel = ObjectProperty(allow_none=True)
+    aspect_ratio = BoundedNumericProperty(0.5, min=0.0, max=1.0)
 
 
 class ScenePanel(TabbedPanelItem):

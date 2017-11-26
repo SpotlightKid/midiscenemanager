@@ -6,10 +6,12 @@
     background_normal: 'assets/img/button_background.png'
     background_down: 'assets/img/button_background_down.png'
     background_color: C('##FF7400')
-    size_hint_y: 0.15
+    size_hint_y: None
     size_hint_x: 0.2
     text_size: self.width, None
-    height: self.texture_size[1]
+    #height: self.texture_size[1]
+    # keep
+    height: self.aspect_ratio * self.width
     padding: '10dp', '20dp'
 
 
