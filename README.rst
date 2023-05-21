@@ -1,6 +1,11 @@
 MIDISceneManager
 ================
 
+.. warning::
+    This project is archived and remains in an unfinished and unmainmtained state.
+ 
+----
+
 Switch between setups of MIDI devices (scenes) with a press of a button.
 
 
